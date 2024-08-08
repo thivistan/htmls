@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise Kadhal Quest</title>
+    <style>
+        #movingButton {
+            position: fixed;
+            transition: all 0.5s ease;
+            pointer-events: none; /* Makes the button unclickable */
+        }
+        #staticButton {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>Welcome to the Show</h1>
+        <p>Ena madam, ena intha pakam vanthruka!, seri seri vanthathum vanthuta antha start button ah click panu</p>
+        <button onclick="nextPage()">Start!</button>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const pages = [
+            {
+                title: "Vankkam",
+                content: "Bday ku ena pandrathunu thrla, seri ethachum panuvom nu etha paniruken",
+                type: "button"
+            },
+            {
+                title: "Arambikilama",
+                content: " Ok, lets start this ",
+                type: "button"
+            },
+            {
+                title: "Tim irukanah?",
+                content: "Avan kita oru code word iruku atha enanu kelu",
+                type: "button"
+            },
+            {
+                title: "Enter Code word",
+                content: "Avan kita poi na code word soluvenah, seri next ah click panu",
+                type: "button"
+            },
+            {
+                title: "Lets do some Quiz",
+                content: "(16÷4)×3+7−10+9÷3−4×2 ....Answer:",
+                type: "riddle",
+                answer: "5"
+            },
+            
+        
+            {
+                title: "bore adikuthu lets play something catch that button if u can",
+                content: "I'm as quick as Rajinikanth in a fight scene! Try to catch me!",
+                type: "moving"
+            },
+           
+        
+            {
+                title: "Seri, seri... Unmaiya soldren",
+                content: "Idhu last illa... Adhukku aduthadhu dhaan!",
+                type: "button"
+            },
+            {
+                title: "Ippo correcta sollaren...",
+                content: "Aduthadhu dhaan unmaiyana LAST button!",
+                type: "button"
+            },
+            {
+                title: "The Grand Finale, I promise!",
+                content: "Semma surprise waiting for you! Click for your gift, kannu kutty!",
+                type: "button"
+            }
+        ];
+
+        function nextPage() {
+            currentPage++;
+            if (currentPage <= pages.length) {
+                const page = pages[currentPage - 1];
+                let content = `
+                    <h1>${page.title}</h1>
+                    <p>${page.content}</p>
+                `;
+
+                if (page.type === "button") {
+                    content += `<button onclick="nextPage()">Next</button>`;
+                } else if (page.type === "riddle") {
+                    content += `
+                        <input type="text" id="answer" placeholder="Enter your answer">
+                        <button onclick="checkAnswer('${page.answer}')">Submit</button>
+                    `;
+                } else if (page.type === "moving") {
+                    content += `
+                        <button id="movingButton">Catch me!</button>
+                        <button id="staticButton" onclick="nextPage()">I know you can't catch that button. That's why I made this. Now click this!</button>
+                    `;
+                    setTimeout(moveButton, 100);
+                    setTimeout(showStaticButton, 10000); // Show static button after 10 seconds
+                }
+
+                document.getElementById('content').innerHTML = content;
+            } else {
+                document.getElementById('content').innerHTML = `
+                    <h1>Congratulations, En Uyire!</h1>
+                    <p>You've completed the Surprise Kadhal Quest! Your gift awaits...</p>
+                    <a href="https://trinibday.vercel.app" target="_blank">
+                        <button>Get Your Gift, Kannu!</button>
+                    </a>
+                `;
+            }
+        }
+
+        function checkAnswer(correctAnswer) {
+            const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
+            if (userAnswer === correctAnswer.toLowerCase()) {
+                nextPage();
+            } else {
+                alert("Aiyyo! Try again, kannu!");
+            }
+        }
+
+        function moveButton() {
+            const button = document.getElementById('movingButton');
+            if (button) {
+                const maxX = window.innerWidth - button.offsetWidth;
+                const maxY = window.innerHeight - button.offsetHeight;
+                const newX = Math.floor(Math.random() * maxX);
+                const newY = Math.floor(Math.random() * maxY);
+                button.style.left = newX + 'px';
+                button.style.top = newY + 'px';
+                setTimeout(moveButton, 1000);
+            }
+        }
+
+        function showStaticButton() {
+            const staticButton = document.getElementById('staticButton');
+            if (staticButton) {
+                staticButton.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
